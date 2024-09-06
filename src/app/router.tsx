@@ -8,7 +8,7 @@ import { AppRoot } from "./routes/app/root";
 export const createAppRouter = (queryClient: QueryClient) =>
     createBrowserRouter([
         {
-            path: '/login',
+            path: '',
             lazy: async () => {
                 const { default: LoginForm } = await import('../features/auth/login-form');
                 return { Component: LoginForm };

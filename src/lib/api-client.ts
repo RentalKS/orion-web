@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { env } from '../config/env';
 
 const apiClient = axios.create({
-    baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080',
+    baseURL: env.API_URL || 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
     },

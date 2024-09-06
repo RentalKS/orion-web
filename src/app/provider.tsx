@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { AuthLoader } from '../lib/auth';
 import { queryConfig } from '../lib/react-query';
 
 type AppProviderProps = {
@@ -25,15 +24,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             }
         >
             <QueryClientProvider client={queryClient}>
-                <AuthLoader
+                {/* <AuthLoader
                     renderLoading={() => (
                         <div className="flex h-screen w-screen items-center justify-center">
-                            {/* TODO: Add loading component */}
+                             TODO: Add loading component
                         </div>
                     )}
-                >
-                    {children}
-                </AuthLoader>
+                > */}
+                {children}
+                {/* </AuthLoader> */}
             </QueryClientProvider>
         </React.Suspense>
     );
