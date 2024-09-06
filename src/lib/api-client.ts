@@ -1,6 +1,6 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 
-const apiClient: AxiosInstance = axios.create({
+const apiClient = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
     (response) => {
-        return response;
+        return response.data;
     },
     (error) => {
         const status = error.response?.status;
