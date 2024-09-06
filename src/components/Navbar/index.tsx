@@ -39,7 +39,6 @@ const Navbar = () => {
     ];
 
     const [current, setCurrent] = useState("projects");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onClick = (e: any) => {
         console.log("click ", e);
         setCurrent(e.key);
