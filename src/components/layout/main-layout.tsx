@@ -53,7 +53,7 @@ function MainLayout({ contentChildren }: MainLayoutProps) {
                 </Menu>
             </Sider>
             <Layout>
-                <Content style={{ margin: "16px", backgroundColor: "#00000010" }}>
+                <Content>
                     {contentChildren}
                 </Content>
             </Layout>
