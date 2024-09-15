@@ -29,7 +29,7 @@ export const DashboardRevenue = () => {
             styles={{ header: { minHeight: "48px" } }}
         >
             <Flex justify="space-between" align="center" style={{ height: "280px" }}>
-                <Flex vertical align="start">
+                <Flex vertical style={{ alignSelf: "flex-start" }}>
                     <Statistic title="Payment" value={0} suffix="€" />
                     <Statistic title="Deposit" value={0} suffix="€" />
                 </Flex>
@@ -68,7 +68,7 @@ export const DashboardRevenue = () => {
                         <Line
                             key={key}
                             type="monotone"
-                            dataKey={key.toLowerCase()}
+                            dataKey={key}
                             stroke={COLORS[index % COLORS.length]}
                             hide={activeSeries.includes(key)}
                         />

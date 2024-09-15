@@ -1,5 +1,7 @@
-function getRandomNumber(min: number, max: number) {
-    return Math.random() * (max - min) + min;
+import { Segment } from "../components/ui/charts";
+
+function getRandomInt(x: number, y: number) {
+    return Math.floor(Math.random() * (y - x + 1)) + x;
 }
 
 const paymentData = [
@@ -26,18 +28,33 @@ const dateLabels = generateDateLabels();
 
 export const profitData = dateLabels.map((date) => ({
     name: date,
-    rentals: Math.floor(Math.random() * 4000) + 1000,
-    expenses: Math.floor(Math.random() * 4000) + 1000,
-    extras: Math.floor(Math.random() * 4000) + 1000,
-    deposit: Math.floor(Math.random() * 4000) + 1000,
-    insurance: Math.floor(Math.random() * 4000) + 1000,
-    taxes: Math.floor(Math.random() * 4000) + 1000
+    Rentals: Math.floor(Math.random() * 4000) + 1000,
+    Expenses: Math.floor(Math.random() * 4000) + 1000,
+    Extras: Math.floor(Math.random() * 4000) + 1000,
+    Deposit: Math.floor(Math.random() * 4000) + 1000,
+    Insurance: Math.floor(Math.random() * 4000) + 1000,
+    Taxes: Math.floor(Math.random() * 4000) + 1000
 }));
 
 export const rentalData = dateLabels.map((date) => ({
     name: date,
-    reserved: getRandomNumber(0, 10),
-    rental: getRandomNumber(0, 10),
-    done: getRandomNumber(0, 10),
-    canceled: getRandomNumber(0, 10),
+    Reserved: getRandomInt(0, 10),
+    Rental: getRandomInt(0, 10),
+    Done: getRandomInt(0, 10),
+    Canceled: getRandomInt(0, 10),
 }));
+
+export const getRandomSegments = () => {
+    const segments: Segment[] = [
+        {
+            title: "Rentals",
+            value: getRandomInt(0, 9),
+        },
+        {
+            title: "Returns",
+            value: getRandomInt(0, 9),
+        }
+    ];
+
+    return segments;
+}

@@ -1,18 +1,24 @@
-import { Button, Card, List, Typography } from "antd";
+import { Button, Card, DatePicker, DatePickerProps, List, Typography } from "antd";
 import { COLORS, Segment, StatusLine } from "../../components/ui/charts";
-
-const segments = [
-    { title: "Rentals", value: 5 },
-    { title: "Returns", value: 3 },
-];
+import { Dayjs } from "dayjs";
+import { useState } from "react";
+import { getRandomSegments } from "../../utils/dummyData";
 
 const { Text } = Typography;
 const { Item: ListItem } = List;
 
+
 export const DashboardDailyPlan = () => {
+    const [segments, setSegments] = useState<Segment[]>(getRandomSegments());
+    const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
+        console.log(date, dateString);
+        setSegments(getRandomSegments());
+    };
+
     return (
         <Card
-            title="Daily plan"
+            title={"Daily plan"}
+            extra={<DatePicker onChange={onChange} />}
             style={{
                 width: "35%",
                 marginRight: '2rem'
