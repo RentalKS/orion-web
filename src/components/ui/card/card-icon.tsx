@@ -9,7 +9,7 @@ interface IconProps {
     divProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
-function CardIcon({ icon: Icon, color = '#FFF', iconProps, divProps }: IconProps) {
+export const CardIcon: React.FC<IconProps> = ({ icon: Icon, color = '#fff', iconProps, divProps }) => {
     return (
         <div
             style={{
@@ -17,15 +17,13 @@ function CardIcon({ icon: Icon, color = '#FFF', iconProps, divProps }: IconProps
                 justifyContent: 'center',
                 backgroundColor: Color(color).alpha(0.07).toString(),
                 borderRadius: '50%',
-                padding: '16px',
+                padding: '14px',
                 marginLeft: 12,
                 marginRight: 10
             }}
             {...divProps}
         >
-            <Icon color={color} width={32} height={32}  {...iconProps} />
+            <Icon color={color} width={28} height={28}  {...iconProps} />
         </div>
     );
 }
-
-export default CardIcon;

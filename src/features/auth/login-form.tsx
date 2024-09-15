@@ -9,7 +9,7 @@ interface LoginFormInputs {
     remember: boolean;
 }
 
-function LoginForm() {
+export const LoginForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
 
     const onSubmit = (data: LoginFormInputs) => {
@@ -59,5 +59,3 @@ function LoginForm() {
         </Form>
     );
 };
-
-export default LoginForm;

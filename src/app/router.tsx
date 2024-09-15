@@ -10,7 +10,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
             path: '/login',
             lazy: async () => {
-                const { default: LoginForm } = await import('../features/auth/login-form');
+                const { LoginForm } = await import('../features/auth/login-form');
                 return { Component: LoginForm };
             },
         },
@@ -23,7 +23,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 {
                     path: 'dashboard',
                     lazy: async () => {
-                        const { default: Dashboard } = await import('../features/dashboard/dashboard');
+                        const { Dashboard } = await import('../features/dashboard/dashboard');
                         return { Component: Dashboard };
                     },
                 }

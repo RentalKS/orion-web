@@ -4,20 +4,23 @@ import React from 'react';
 import { Card, Statistic, StatisticProps, Typography } from 'antd';
 import { CardProps } from 'antd/es/card';
 import { valueType } from 'antd/es/statistic/utils';
-import CardIcon from './card-icon';
+import { CardIcon } from '.';
 
 interface StatisticCardProps {
     icon?: React.ComponentType<any>;
     title?: React.ReactNode;
-    value?: valueType
-    statisticProps?: StatisticProps;
-    cardProps?: CardProps;
-    iconProps?: React.SVGProps<SVGSVGElement>;
+    value?: valueType;
+    color?: string;
+    props?: {
+        statistics?: StatisticProps;
+        card?: CardProps;
+        icon?: React.SVGProps<SVGSVGElement>
+    }
 }
 
 const { Text } = Typography;
 
-function StatisticCard({ icon, title, value, statisticProps, cardProps, iconProps }: StatisticCardProps) {
+export const StatisticCard: React.FC<StatisticCardProps> = ({ icon, title, value, color, props }) => {
 
     const getFormattedTitle = (title?: React.ReactNode) => {
         if (typeof title !== "string") return title;
@@ -43,16 +46,16 @@ function StatisticCard({ icon, title, value, statisticProps, cardProps, iconProp
                     alignItems: 'center'
                 }
             }}
-            {...cardProps}
+            {...props?.card}
         >
-            {icon && <CardIcon icon={icon} color={"#0fa3b1"} {...iconProps} />}
+            {icon && <CardIcon icon={icon} color={color} {...props?.icon} />}
             <div style={{ margin: 16, marginLeft: 18 }}>
                 <Statistic
                     valueStyle={{
                         fontWeight: 700,
                         fontSize: '32px'
                     }}
-                    {...statisticProps}
+                    {...props?.statistics}
                     title={getFormattedTitle(title)}
                     value={getFormattedValue(value)}
                 />
@@ -60,5 +63,3 @@ function StatisticCard({ icon, title, value, statisticProps, cardProps, iconProp
         </Card>
     );
 };
-
-export default StatisticCard;
