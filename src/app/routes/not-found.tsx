@@ -1,13 +1,22 @@
-import { Link } from "react-router-dom";
+import { Button, Result } from "antd";
+import { useNavigate } from "react-router-dom";
 
 export const NotFoundRoute = () => {
+    const navigate = useNavigate();
+
     return (
-        <div className="mt-52 flex flex-col items-center font-semibold">
-            <h1>404 - Not Found</h1>
-            <p>Sorry, the page you are looking for does not exist.</p>
-            <Link to="/" replace>
-                Go to Home
-            </Link>
-        </div>
+        <Result
+            status="404"
+            title="404"
+            subTitle="Sorry, the page you visited does not exist."
+            extra={
+                <Button
+                    type="primary"
+                    onClick={() => navigate('/dashboard')}
+                >
+                    Back Home
+                </Button>
+            }
+        />
     );
 };

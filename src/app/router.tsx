@@ -23,10 +23,31 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 {
                     path: 'dashboard',
                     lazy: async () => {
-                        const { Dashboard } = await import('../features/dashboard/dashboard');
+                        const { Dashboard } = await import('../features/dashboard');
                         return { Component: Dashboard };
                     },
-                }
+                },
+                {
+                    path: 'vehicles',
+                    lazy: async () => {
+                        const { Vehicles } = await import('../features/vehicles');
+                        return { Component: Vehicles };
+                    },
+                },
+                {
+                    path: 'rentals',
+                    lazy: async () => {
+                        const { Rentals } = await import('../features/rentals');
+                        return { Component: Rentals };
+                    },
+                },
+                {
+                    path: 'clients',
+                    lazy: async () => {
+                        const { Clients } = await import('../features/clients');
+                        return { Component: Clients };
+                    },
+                },
             ]
         },
         {
@@ -37,7 +58,14 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 </ProtectedRoute>
             ),
             children: []
-        }
+        },
+        {
+            path: '*',
+            lazy: async () => {
+                const { NotFoundRoute } = await import('./routes/not-found');
+                return { Component: NotFoundRoute };
+            },
+        },
     ]);
 
 export const AppRouter = () => {

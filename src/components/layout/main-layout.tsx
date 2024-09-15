@@ -3,6 +3,7 @@ import { Layout, Menu, Image, Button } from 'antd';
 
 import './styles.css';
 import { Bell, CalendarClock, CalendarDays, CarFront, ChartGantt, LayoutDashboard, LogOut, NotepadText, Settings, User, UsersRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
@@ -19,7 +20,7 @@ const items: MenuItem[] = [
         label: 'Planner',
         icon: <NotepadText size={20} />,
         children: [
-            { key: 'dailyPlan', label: 'Daily plan', icon: <CalendarDays size={20} />, className: 'custom-sub-menu-item' },
+            { key: 'daily', label: 'Daily plan', icon: <CalendarDays size={20} />, className: 'custom-sub-menu-item' },
             { key: 'timeline', label: 'Timeline', icon: <ChartGantt size={20} />, className: 'custom-sub-menu-item' },
         ],
     },
@@ -39,6 +40,13 @@ const items: MenuItem[] = [
 ]
 
 function MainLayout({ contentChildren }: MainLayoutProps) {
+    const navigate = useNavigate();  // Initialize useNavigate
+
+    // Handle menu item click
+    const onMenuClick: MenuProps['onClick'] = (e) => {
+        navigate(`/${e.keyPath.reverse().join('/')}`)
+    };
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Sider width={250} theme="dark" className='sidebar'>
@@ -57,6 +65,7 @@ function MainLayout({ contentChildren }: MainLayoutProps) {
                         mode="inline"
                         theme="dark"
                         items={items}
+                        onClick={onMenuClick}
                     />
                 </div>
                 <Button type="default" className='logout-btn' icon={<LogOut />} size={'large'}>
