@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import MainLayout from '../../../components/layout/main-layout';
-
 
 export const AppRoot = () => {
     const location = useLocation();
@@ -18,7 +17,7 @@ export const AppRoot = () => {
                 key={location.pathname}
                 fallback={<div>Something went wrong!</div>}
             >
-                <MainLayout contentChildren={<div>hello</div>} />
+                <MainLayout contentChildren={<Outlet />} />
             </ErrorBoundary>
         </Suspense>
     );

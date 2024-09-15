@@ -8,18 +8,26 @@ import { AppRoot } from "./routes/app/root";
 export const createAppRouter = (queryClient: QueryClient) =>
     createBrowserRouter([
         {
-            path: '',
-            lazy: async () => {
-                const { AppRoot } = await import('./routes/app/root');
-                return { Component: AppRoot };
-            },
-        },
-        {
-            path: '',
+            path: '/login',
             lazy: async () => {
                 const { default: LoginForm } = await import('../features/auth/login-form');
                 return { Component: LoginForm };
             },
+        },
+        {
+            path: '/',
+            element: (
+                <AppRoot />
+            ),
+            children: [
+                {
+                    path: 'dashboard',
+                    lazy: async () => {
+                        const { default: Dashboard } = await import('../features/dashboard/dashboard');
+                        return { Component: Dashboard };
+                    },
+                }
+            ]
         },
         {
             path: '/app',
