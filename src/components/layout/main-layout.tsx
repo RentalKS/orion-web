@@ -1,9 +1,8 @@
-import { Divider, Layout, Menu, Image } from 'antd';
-
-import { ArrowRightLeft, Bell, CarFront, CreditCard, LayoutDashboard, Newspaper, NotebookText, Settings } from 'lucide-react';
-import Paragraph from 'antd/es/typography/Paragraph';
+import type { MenuProps } from 'antd';
+import { Layout, Menu, Image, Button } from 'antd';
 
 import './styles.css';
+import { Bell, CalendarClock, CalendarDays, CarFront, ChartGantt, LayoutDashboard, LogOut, NotepadText, Settings, User, UsersRound } from 'lucide-react';
 
 const { Sider, Content } = Layout;
 
@@ -11,46 +10,58 @@ interface MainLayoutProps {
     contentChildren: React.ReactNode;
 }
 
+type MenuItem = Required<MenuProps>['items'][number];
+
+const items: MenuItem[] = [
+    { key: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+    {
+        key: 'planner',
+        label: 'Planner',
+        icon: <NotepadText size={20} />,
+        children: [
+            { key: 'dailyPlan', label: 'Daily plan', icon: <CalendarDays size={20} />, className: 'custom-sub-menu-item' },
+            { key: 'timeline', label: 'Timeline', icon: <ChartGantt size={20} />, className: 'custom-sub-menu-item' },
+        ],
+    },
+    { key: 'vehicles', icon: <CarFront size={20} />, label: 'Vehicles' },
+    { key: 'rentals', icon: <CalendarClock size={20} />, label: 'Rentals' },
+    { key: 'clients', icon: <UsersRound size={20} />, label: 'Clients' },
+    { type: 'divider', className: 'menu-item-divider' },
+    {
+        key: 'settings',
+        label: 'Settings',
+        icon: <Settings size={20} />,
+        children: [
+            { key: 'account', label: 'Account', icon: <User size={20} />, className: 'custom-sub-menu-item' },
+            { key: 'notifications', label: 'Notifications', icon: <Bell size={20} />, className: 'custom-sub-menu-item' },
+        ],
+    },
+]
+
 function MainLayout({ contentChildren }: MainLayoutProps) {
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            <Sider width={250} theme="dark" style={{ paddingInline: "1.4rem", paddingTop: "2rem" }}>
-                <div className='company-name'>
-                    <Image
-                        width={85}
-                        preview={false}
-                        src="../src/assets/logo.png"
-                        className='logo'
+            <Sider width={250} theme="dark" className='sidebar'>
+                <div>
+                    <div className='company-name'>
+                        <Image
+                            width={85}
+                            preview={false}
+                            src="../src/assets/logo.png"
+                            className='logo'
+                        />
+                    </div>
+                    <Menu
+                        defaultSelectedKeys={['1']}
+                        defaultOpenKeys={['sub1']}
+                        mode="inline"
+                        theme="dark"
+                        items={items}
                     />
                 </div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-                    <Menu.Item key="1" icon={<LayoutDashboard size={20} />} className='menu-item'>
-                        Dashboard
-                    </Menu.Item>
-                    <Menu.Item key="2" icon={<CarFront size={20} />} className='menu-item'>
-                        Vehicles
-                    </Menu.Item>
-                    <Menu.Item key="3" icon={<NotebookText size={20} />} className='menu-item'>
-                        Bookings
-                    </Menu.Item>
-                    <Menu.Item key="4" icon={<Bell size={20} />} className='menu-item'>
-                        Notifications
-                    </Menu.Item>
-                    <Menu.Item key="5" icon={<Settings size={20} />} className='menu-item'>
-                        Settings
-                    </Menu.Item>
-                    <Divider style={{ backgroundColor: "#6c757d" }} />
-                    <Paragraph style={{ color: "#fff", marginLeft: "1rem" }}>Report</Paragraph>
-                    <Menu.Item key="6" icon={<CreditCard size={20} />} className='menu-item'>
-                        Payment Details
-                    </Menu.Item>
-                    <Menu.Item key="7" icon={<ArrowRightLeft size={20} />} className='menu-item'>
-                        Transactions
-                    </Menu.Item>
-                    <Menu.Item key="8" icon={<Newspaper size={20} />} className='menu-item'>
-                        Car Report
-                    </Menu.Item>
-                </Menu>
+                <Button type="default" className='logout-btn' icon={<LogOut />} size={'large'}>
+                    Logout
+                </Button>
             </Sider>
             <Layout>
                 <Content>
