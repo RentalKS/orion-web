@@ -1,0 +1,45 @@
+.tab-item-ripple .ant-tabs-tab {
+  padding: 13px 0 !important;
+}
+
+.recharts-legend-wrapper .recharts-default-legend .recharts-legend-item {
+  cursor: pointer;
+}
+
+.multi-color-line {
+  display: flex;
+  height: 15px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.line-segment {
+  flex-grow: 1;
+}
+
+.line-segment:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.line-segment:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.daily-plan-item-title {
+  width: 70%;
+  padding-right: 10px;
+}
+
+.daily-plan-item-status {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin-right: auto;
+}
+
+.daily-plan-item-value {
+  font-weight: 700;
+  max-width: 10%;
+}
