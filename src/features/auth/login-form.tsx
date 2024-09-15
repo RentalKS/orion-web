@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
@@ -10,7 +9,7 @@ interface LoginFormInputs {
     remember: boolean;
 }
 
-const LoginForm: React.FC = () => {
+function LoginForm() {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
 
     const onSubmit = (data: LoginFormInputs) => {
