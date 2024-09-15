@@ -4,6 +4,7 @@ import { Layout, Menu, Image, Button } from 'antd';
 import './styles.css';
 import { Bell, CalendarClock, CalendarDays, CarFront, ChartGantt, LayoutDashboard, LogOut, NotepadText, Settings, User, UsersRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import NotificationMenu from './notifications';
 
 const { Sider, Content } = Layout;
 
@@ -77,6 +78,7 @@ function MainLayout({ contentChildren }: MainLayoutProps) {
                     {contentChildren}
                 </Content>
             </Layout>
+            <NotificationMenu />
         </Layout>
     );
 };
