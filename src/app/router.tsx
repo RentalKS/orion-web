@@ -48,6 +48,20 @@ export const createAppRouter = (queryClient: QueryClient) =>
                         return { Component: Clients };
                     },
                 },
+                {
+                    path: 'daily-plan',
+                    lazy: async () => {
+                        const { DailyPlan } = await import('../features/planner');
+                        return { Component: DailyPlan };
+                    },
+                },
+                {
+                    path: 'timeline',
+                    lazy: async () => {
+                        const { Baseline } = await import('../features/planner');
+                        return { Component: Baseline };
+                    },
+                },
             ]
         },
         {

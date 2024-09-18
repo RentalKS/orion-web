@@ -21,7 +21,7 @@ const items: MenuItem[] = [
         label: 'Planner',
         icon: <NotepadText size={20} />,
         children: [
-            { key: 'daily', label: 'Daily plan', icon: <CalendarDays size={20} />, className: 'custom-sub-menu-item' },
+            { key: 'daily-plan', label: 'Daily plan', icon: <CalendarDays size={20} />, className: 'custom-sub-menu-item' },
             { key: 'timeline', label: 'Timeline', icon: <ChartGantt size={20} />, className: 'custom-sub-menu-item' },
         ],
     },
@@ -45,7 +45,7 @@ function MainLayout({ contentChildren }: MainLayoutProps) {
 
     // Handle menu item click
     const onMenuClick: MenuProps['onClick'] = (e) => {
-        navigate(`/${e.keyPath.reverse().join('/')}`)
+        navigate(e.key)
     };
 
     return (
@@ -74,7 +74,7 @@ function MainLayout({ contentChildren }: MainLayoutProps) {
                 </Button>
             </Sider>
             <Layout>
-                <Content>
+                <Content style={{ padding: "1.7rem" }}>
                     {contentChildren}
                 </Content>
             </Layout>
