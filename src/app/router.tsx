@@ -10,8 +10,8 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
             path: '/login',
             lazy: async () => {
-                const { LoginForm } = await import('../features/auth/login-form');
-                return { Component: LoginForm };
+                const { LoginContainer } = await import('../features/auth/login-container');
+                return { Component: LoginContainer };
             },
         },
         {

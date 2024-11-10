@@ -1,61 +1,48 @@
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
-import 'antd/dist/reset.css';
+import { LoginInput, loginInputSchema, useLogin } from '../../lib/auth';
+import { FormItem } from 'react-hook-form-antd';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface LoginFormInputs {
-    username: string;
+    email: string;
     password: string;
-    remember: boolean;
 }
 
 export const LoginForm = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
+    const { control, handleSubmit } = useForm<LoginFormInputs>({
+        resolver: zodResolver(loginInputSchema)
+    });
+    const { mutate: login } = useLogin();
 
-    const onSubmit = (data: LoginFormInputs) => {
-        console.log(data);
+    const onSubmit = async (data: LoginFormInputs) => {
+        login(data as LoginInput);
     };
 
     return (
         <Form
             name="login_form"
-            className="login-form"
             initialValues={{ remember: true }}
             onFinish={handleSubmit(onSubmit)}
-            style={{ maxWidth: '300px', margin: '0 auto', padding: '2rem 1rem', background: '#fff', borderRadius: '8px' }}
+            style={{ maxWidth: '300px', height: 'fit-content', margin: '0 auto', padding: '2rem 1rem', background: '#fff', borderRadius: '8px' }}
         >
-            <Form.Item
-                validateStatus={errors.username ? 'error' : ''}
-                help={errors.username ? errors.username.message : ''}
-            >
+            <FormItem control={control} name="email">
                 <Input
-                    {...register('username')}
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     placeholder="Username"
                 />
-            </Form.Item>
-
-            <Form.Item
-                validateStatus={errors.password ? 'error' : ''}
-                help={errors.password ? errors.password.message : ''}
-            >
+            </FormItem>
+            <FormItem control={control} name="password">
                 <Input.Password
-                    {...register('password')}
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
                     placeholder="Password"
                 />
-            </Form.Item>
-
-            <Form.Item>
-                <Checkbox {...register('remember')}>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button" block>
-                    Log in
-                </Button>
-            </Form.Item>
+            </FormItem>
+            <Button type="primary" htmlType="submit" className="login-form-button" block>
+                Log in
+            </Button>
         </Form>
     );
 };

@@ -16,7 +16,7 @@ export const Baseline: React.FC = () => {
     };
 
     const carData = [
-        { CarID: 1, CarName: 'Audi A5', RentalStart: new Date('2024-09-01'), RentalEnd: new Date('2024-09-05') },
+        { CarID: 1, CarName: 'Audi A5', RentalStart: new Date('2024-09-01'), RentalEnd: new Date('2024-09-06') },
         { CarID: 2, CarName: 'BMW M3', RentalStart: new Date('2024-09-02'), RentalEnd: new Date('2024-09-06') },
         { CarID: 3, CarName: 'Mercedes C-Class', RentalStart: new Date('2024-09-04'), RentalEnd: new Date('2024-09-08') },
         { CarID: 4, CarName: 'Tesla Model 3', RentalStart: new Date('2024-09-03'), RentalEnd: new Date('2024-09-07') },
