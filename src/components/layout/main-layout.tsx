@@ -28,6 +28,7 @@ const items: MenuItem[] = [
     { key: 'vehicles', icon: <CarFront size={20} />, label: 'Vehicles' },
     { key: 'rentals', icon: <CalendarClock size={20} />, label: 'Rentals' },
     { key: 'clients', icon: <UsersRound size={20} />, label: 'Clients' },
+    { key: 'locations', icon: <UsersRound size={20} />, label: 'Locations' },
     { type: 'divider', className: 'menu-item-divider' },
     {
         key: 'settings',
