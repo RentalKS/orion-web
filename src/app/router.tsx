@@ -51,7 +51,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 {
                     path: 'locations',
                     lazy: async () => {
-                        const { Locations } = await import('../features/locations');
+                        const { Locations } = await import('../features/location');
                         return { Component: Locations };
                     },
                 },
