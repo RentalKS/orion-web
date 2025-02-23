@@ -37,8 +37,8 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 {
                     path: 'rentals',
                     lazy: async () => {
-                        const { Rentals } = await import('../features/rentals');
-                        return { Component: Rentals };
+                        const { Reservations } = await import('../features/reservations');
+                        return { Component: Reservations };
                     },
                 },
                 {
@@ -51,8 +51,57 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 {
                     path: 'locations',
                     lazy: async () => {
-                        const { Locations } = await import('../features/location');
+                        const { Locations } = await import('../features/locations');
                         return { Component: Locations };
+                    },
+                },
+                {
+                    path: 'brands',
+                    lazy: async () => {
+                        const { Brands } = await import('../features/brands');
+                        return { Component: Brands };
+                    },
+                },
+                {
+                    path: 'models',
+                    lazy: async () => {
+                        const { Models } = await import('../features/modelsOfBrand');
+                        return { Component: Models };
+                    },
+                },
+                {
+                    path: 'rateDates',
+                    lazy: async () => {
+                        const { RateDates } = await import('../features/rateDates');
+                        return { Component: RateDates };
+                    },
+                },
+                {
+                    path: 'companies',
+                    lazy: async () => {
+                        const { Companies } = await import('../features/companies');
+                        return { Component: Companies };
+                    },
+                },
+                {
+                    path: 'categories',
+                    lazy: async () => {
+                        const { Categories } = await import('../features/categories');
+                        return { Component: Categories };
+                    },
+                },
+                {
+                    path: 'sections',
+                    lazy: async () => {
+                        const { Sections } = await import('../features/sections');
+                        return { Component: Sections };
+                    },
+                },
+                {
+                    path: 'sign',
+                    lazy: async () => {
+                        const { SignAgreement } = await import('../features/payments');
+                        return { Component: SignAgreement };
                     },
                 },
                 {

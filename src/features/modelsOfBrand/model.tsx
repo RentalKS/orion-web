@@ -2,18 +2,17 @@ import { Button, Col, Form, Input, message, Modal, Row, Space, Table, TableProps
 import { useState } from "react";
 import { Pencil, Plus, ReceiptText, Trash2 } from "lucide-react";
 import dayjs from "dayjs";
-import { useCreateCustomer } from "../../hooks/operations/useCreate";
-import { useCustomers } from "../../hooks/operations/useFetch";
-import { useUpdateCustomer } from "../../hooks/operations/useUpdate";
-import { useDeleteCustomer } from "../../hooks/operations/useDelete";
-
+import { useModels } from "../../hooks/operations/useFetch";
+import { useCreateModel } from "../../hooks/operations/useCreate";
+import { useUpdateModel } from "../../hooks/operations/useUpdate";
+import { useDeleteModel } from "../../hooks/operations/useDelete";
 
 const {Text} = Typography;
 
-export const Clients = () => {
+export const Models = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+  const [selectedModel, setSelectedModel] = useState<any>(null);
   const [form] = Form.useForm();
   const [search, setSearch] = useState('');
   const { 
@@ -21,15 +20,28 @@ export const Clients = () => {
     isLoading,
     isError,
     error
-  } = useCustomers({page:1, size:10, search: ''});
+  } = useModels({page:1, size:10, search: ''});
 
-  const createCustomerMutation = useCreateCustomer();
-  const updateCustomerMutation = useUpdateCustomer();
-  const deleteCustomerMutation = useDeleteCustomer();
+  const createModelMutation = useCreateModel();
+  const updateModelMutation = useUpdateModel();
+  const deleteModelMutation = useDeleteModel();
 
-  const handleCreateCustomer = () => {
+  const tableData = data?.data?.data.map((model) => ({
+    key: String(model.id),
+    id: model.id,
+    name: model?.name,
+    type: model.type,
+    brandId: model?.brandId,
+    seatingCapacity: model.seatingCapacity,
+    fuelEfficiency: model.fuelEfficiency,
+    modelImageUrl: model?.modelImageUrl,
+    // vehicles: model.vehicles,
+  
+  })) || [];
+
+  const handleCreateModel = () => {
     form.validateFields().then((values) => {
-      createCustomerMutation.mutate(values, {
+      createModelMutation.mutate(values, {
         onSuccess: () => {
           message.success('Customer created succesfully');
           setIsModalOpen(false);
@@ -39,19 +51,19 @@ export const Clients = () => {
     });
   };
 
-  const handleEditCustomer = (customer: any) => {
-    setSelectedCustomer(customer);
-    form.setFieldsValue(customer);
+  const handleEditModel = (model: any) => {
+    setSelectedModel(model);
+    form.setFieldsValue(model);
     setIsEditModalOpen(true);
   };
 
-  const handleUpdateCustomer = () => {
+  const handleUpdateModel = () => {
     form.validateFields().then((values) => {
-      updateCustomerMutation.mutate(
-        { customerId: selectedCustomer.id, updatedData: values },
+      updateModelMutation.mutate(
+        { modelId: selectedModel.id, updatedData: values },
         {
           onSuccess: () => {
-            message.success('Customer updated successfully');
+            message.success('Model updated successfully');
             setIsEditModalOpen(false);
             form.resetFields();
           },
@@ -60,33 +72,28 @@ export const Clients = () => {
     });
   };
 
-  const handleDeleteCustomer = (customerId: number) => {
+  if (isLoading) return <div>Loading models...</div>;
+  if (isError) return <div>Error: {String(error)}</div>;
+
+  const handleDeleteModel = (modelId: number) => {
     Modal.confirm({
       title: "Are you sure you want to delete this customer?",
       content: "This action cannot be undone.",
       onOk: () => {
-        deleteCustomerMutation.mutate(customerId, {
+        deleteModelMutation.mutate(modelId, {
           onSuccess: () => message.success("Customer deleted successfully"),
         });
       },
     });
   };
 
-
-  const tableData = data?.data?.data.map((customer) => ({
-    key: String(customer.id),
-    id: customer.id,
-    name: customer.name,
-    lastName: customer.lastName,
-    email: customer.email,
-    createdAt: customer.createdAt,
-  
-  })) || [];
-
   const columns: TableProps<typeof tableData[number]>['columns'] = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Name', dataIndex: 'name', key: 'name', render: (val: string) => val || '—' },
-    { title: 'Last Name', dataIndex: 'lastName', key: 'lastName', render: (val: string | null) => val || '—' },
+    { title: 'Type', dataIndex: 'type', key: 'type', render: (val: string | null) => val || '—' },
+    { title: 'Seating Capacity', dataIndex: 'seatingCapacity', key: 'seatingCapacity', render: (val: string | null) => val || '—' },
+    { title: 'Fuel Efficiency', dataIndex: 'fuelEfficiency', key: 'fuelEfficiency', render: (val: string | null) => val || '—' },
+    { title: 'Image', dataIndex: 'modelImageUrl', key: 'modelImageUrl', render: (val: string | null) => val || '—' },
     {
       title: 'Created at',
       dataIndex: 'createdAt',
@@ -102,17 +109,14 @@ export const Clients = () => {
           <Button
             type="text"
             icon={<Pencil size={18} />}
-            onClick={() => handleEditCustomer(record)}
+            onClick={() => handleEditModel(record)}
           />
-          <Button type="text" icon={<Trash2 size={18} />} onClick={()=> handleDeleteCustomer(record.id)}/>
+          <Button type="text" icon={<Trash2 size={18} />} onClick={() => handleDeleteModel(record.id)} />
         </Space>
       ),
     },
   ];
 
-
-  if (isLoading) return <div>Loading customers...</div>;
-  if (isError) return <div>Error: {String(error)}</div>;
 
   return (
     <>
@@ -143,38 +147,46 @@ export const Clients = () => {
       />
 
       {/* Add Customer Modal */}
-      <Modal title="Add Customer" open={isModalOpen} onCancel={() => setIsModalOpen(false)} onOk={handleCreateCustomer}>
+      <Modal title="Add Model" open={isModalOpen} onCancel={() => setIsModalOpen(false)} onOk={handleCreateModel}>
         <Form form={form} layout="vertical">
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Last Name" name="lastName" rules={[{ required: true }]}>
+          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
+          <Form.Item label="Seating Capacity" name="seatingCapacity" rules={[{ required: true}]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Phone Number" name="phoneNumber" rules={[{ required: true }]}>
+          <Form.Item label="Fuel Efficiency" name="fuelEfficiency" rules={[{ required: true}]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Model Image" name="modelImage">
             <Input />
           </Form.Item>
         </Form>
       </Modal>
 
             {/* Edit Customer Modal */}
-      <Modal title="Edit Customer" open={isEditModalOpen} onCancel={() => setIsEditModalOpen(false)} onOk={handleUpdateCustomer}>
+      <Modal title="Edit Model" open={isEditModalOpen} onCancel={() => setIsEditModalOpen(false)} onOk={handleUpdateModel}>
         <Form form={form} layout="vertical">
-          <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+        <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Last Name" name="lastName" rules={[{ required: true }]}>
+          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
+          <Form.Item label="Seating Capacity" name="seatingCapacity" rules={[{ required: true}]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Fuel Efficiency" name="fuelEfficiency" rules={[{ required: true}]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Model Image" name="modelImage">
             <Input />
           </Form.Item>
         </Form>
       </Modal>
     </>
-
   );
 };
