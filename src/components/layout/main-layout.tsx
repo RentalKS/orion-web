@@ -2,7 +2,7 @@ import type { MenuProps } from 'antd';
 import { Layout, Menu, Image, Button } from 'antd';
 
 import './styles.css';
-import { Bell, CalendarClock, CalendarDays, CarFront, ChartGantt, LayoutDashboard, LogOut, NotepadText, Settings, User, UsersRound } from 'lucide-react';
+import { Bell, CalendarClock, CalendarDays, CarFront, ChartGantt, LayoutDashboard, LogOut, NotepadText, Settings, User, UsersRound,MapPinnedIcon,CarIcon,DiamondPlusIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import NotificationMenu from './notifications';
 
@@ -25,9 +25,16 @@ const items: MenuItem[] = [
             { key: 'timeline', label: 'Timeline', icon: <ChartGantt size={20} />, className: 'custom-sub-menu-item' },
         ],
     },
+    { key: 'companies', icon: <DiamondPlusIcon size={20} />, label: 'Companies' },
+    { key: 'categories', icon: <DiamondPlusIcon size={20} />, label: 'Categories' },
+    { key: 'sections', icon: <DiamondPlusIcon size={20} />, label: 'Sections' },
     { key: 'vehicles', icon: <CarFront size={20} />, label: 'Vehicles' },
     { key: 'rentals', icon: <CalendarClock size={20} />, label: 'Rentals' },
     { key: 'clients', icon: <UsersRound size={20} />, label: 'Clients' },
+    { key: 'locations', icon: <MapPinnedIcon size={20} />, label: 'Locations' },
+    { key: 'Brands', icon: <CarFront size={20} />, label: 'Brands' },
+    { key: 'Models', icon: <CarIcon size={20} />, label: 'Models' },
+    { key: 'RateDates', icon: <DiamondPlusIcon size={20} />, label: 'Rate Dates' },
     { type: 'divider', className: 'menu-item-divider' },
     {
         key: 'settings',

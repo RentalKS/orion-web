@@ -1,80 +1,68 @@
-import { Card, Flex, Statistic, Tabs, TabsProps } from "antd";
-import { CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useState } from "react";
-import './styles.css';
-import { adjustedPaymentData, COLORS, profitData } from "../../utils/dummyData";
+import { Card, Statistic, Tabs, TabsProps } from "antd";
+import { PieChart, Pie, Tooltip, Legend, Cell, ResponsiveContainer } from "recharts";
+
+// Define the TypeScript interface based on the API response
+interface PaymentData {
+    totalBookings: number;
+    totalCustomers: number;
+    successfulPayments: number;
+    processedPayments: number;
+    pendingPayments: number;
+    failedPayments: number;
+    totalPayments: number;
+}
+
+// Define the props type for the component
+interface DashboardRevenueProps {
+    paymentsData: PaymentData[];
+}
 
 const chartViewItems: TabsProps['items'] = [
     { key: 'week', label: 'Week' },
     { key: 'month', label: 'Month' },
 ];
 
-export const DashboardRevenue = () => {
-    const [activeSeries, setActiveSeries] = useState<string[]>([]);
-
-    const onChange = (key: string) => {
-        console.log(key);
+export const DashboardRevenue: React.FC<DashboardRevenueProps> = ({ paymentsData }) => {
+    // Extract the first object (assuming single object array response)
+    const paymentData = paymentsData?.[0] || {
+        totalBookings: 0,
+        totalCustomers: 0,
+        successfulPayments: 0,
+        processedPayments: 0,
+        pendingPayments: 0,
+        failedPayments: 0,
+        totalPayments: 0
     };
 
-    const handleLegendClick = (dataKey: any) => {
-        setActiveSeries(prev =>
-            prev.includes(dataKey) ? prev.filter(el => el !== dataKey) : [...prev, dataKey]
-        );
-    };
+    // Prepare chart data
+    const paymentChartData = [
+        { name: "Successful Payments", value: paymentData.successfulPayments || 0 },
+        { name: "Processed Payments", value: paymentData.processedPayments || 0 },
+        { name: "Pending Payments", value: paymentData.pendingPayments || 0 },
+        { name: "Failed Payments", value: paymentData.failedPayments || 0 }
+    ];
 
     return (
         <Card
-            title="Revenue"
-            extra={<Tabs defaultActiveKey="1" items={chartViewItems} onChange={onChange} className="tab-item-ripple" />}
+            title="Revenue Overview"
+            extra={<Tabs items={chartViewItems} className="tab-item-ripple" />}
             styles={{ header: { minHeight: "48px" } }}
         >
-            <Flex justify="space-between" align="center" style={{ height: "280px" }}>
-                <Flex vertical style={{ alignSelf: "flex-start" }}>
-                    <Statistic title="Payment" value={0} suffix="€" />
-                    <Statistic title="Deposit" value={0} suffix="€" />
-                </Flex>
-                <ResponsiveContainer width="30%" height="100%">
-                    <PieChart>
-                        <Pie dataKey="value" data={adjustedPaymentData} innerRadius={50} outerRadius={80}>
-                            {adjustedPaymentData.map((_, index) => (
-                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend
-                            layout="vertical"
-                            align="right"
-                            verticalAlign="middle"
-                            payload={adjustedPaymentData.map((item, index) => ({
-                                id: item.name,
-                                type: "square",
-                                value: item.name,
-                                color: COLORS[index % COLORS.length],
-                            }))}
-                        />
-                    </PieChart>
-                </ResponsiveContainer>
-                <LineChart width={730} height={250} data={profitData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
+            <Statistic title="Total Payments" value={paymentData.totalPayments || 0} suffix="€" />
+            <Statistic title="Total Bookings" value={paymentData.totalBookings || 0} />
+            <Statistic title="Total Customers" value={paymentData.totalCustomers || 0} />
+
+            <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                    <Pie dataKey="value" data={paymentChartData} innerRadius={50} outerRadius={80}>
+                        {paymentChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={["#4CAF50", "#2196F3", "#FFC107", "#F44336"][index]} />
+                        ))}
+                    </Pie>
                     <Tooltip />
-                    <Legend
-                        layout="horizontal"
-                        verticalAlign="top"
-                        onClick={(props) => handleLegendClick(props.dataKey)}
-                    />
-                    {['Rentals', 'Expenses', 'Extras', 'Deposit', 'Insurance', 'Taxes'].map((key, index) => (
-                        <Line
-                            key={key}
-                            type="monotone"
-                            dataKey={key}
-                            stroke={COLORS[index % COLORS.length]}
-                            hide={activeSeries.includes(key)}
-                        />
-                    ))}
-                </LineChart>
-            </Flex>
+                    <Legend />
+                </PieChart>
+            </ResponsiveContainer>
         </Card>
     );
 };

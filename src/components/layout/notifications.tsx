@@ -1,83 +1,132 @@
-import React, { useState } from "react";
-import { Dropdown, List, Avatar, Button, FloatButton } from "antd";
+import React, { useEffect, useState } from "react";
+import { Dropdown, List, Button, FloatButton, Spin } from "antd";
 import { Bell } from "lucide-react";
+import { api } from "../../lib/api-client";
+import { CircleCheckBig } from "lucide-react";
 
-// Define a type for the notification object
+const STATIC_TEST_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaHBhdHZhdGExQGdtYWlsLmNvbSIsImlhdCI6MTc0MDM0MzE5MiwiZXhwIjoxNzQwNDI5NTkyfQ.IdlFHotqAk6nlmQFCN6Z3gxCdj9I-mj0Sgc6AHUHW50';
+
 interface Notification {
     id: number;
     title: string;
-    description: string;
+    message: string;
     avatar?: string;
     read: boolean;
 }
 
-const NotificationMenu: React.FC = () => {
-    const [notifications, setNotifications] = useState<Notification[]>([
-        {
-            id: 1,
-            title: "New rental",
-            description: "BMW M3 has been rented for dates ...",
-            avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFJSMyHRaBeejsHUZlaXiKzdShyOT3QUNRdg&s",
-            read: false,
-        },
-        {
-            id: 2,
-            title: "Audi A4 return",
-            description: "Audi A4 will return today at 16:00",
-            avatar: "https://t3.ftcdn.net/jpg/01/92/21/40/360_F_192214085_QnQ58x0ZKRLSUEgarcjVHNWrnmH8uWTA.jpg",
-            read: true,
-        },
-        {
-            id: 3,
-            title: "New client",
-            description: "A new client has been registered",
-            avatar: "https://icons.veryicon.com/png/o/miscellaneous/two-color-icon-library/user-286.png",
-            read: false,
-        },
-    ]);
+async function fetchNotifications(): Promise<Notification[]> {
+    try {
+        const response = await api.get<Notification[]>('/api/notifications', {
+            headers: {
+                'Authorization': `Bearer ${STATIC_TEST_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+        return [];
+    }
+}
 
-    // Mark all notifications as read
-    const markAllAsRead = () => {
+async function markNotificationAsRead(notificationId: number): Promise<void> {
+    try {
+        await api.post(`/api/notifications/read/${notificationId}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${STATIC_TEST_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        });
+    } catch (error) {
+        console.error("Error marking notification as read:", error);
+    }
+}
+
+async function markAllNotificationsAsRead(): Promise<void> {
+    try {
+        await api.post(`/api/notifications/read/all`, {}, {
+            headers: {
+                'Authorization': `Bearer ${STATIC_TEST_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+        });
+    } catch (error) {
+        console.error("Error marking all notifications as read:", error);
+    }
+}
+
+const NotificationMenu: React.FC = () => {
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+
+    useEffect(() => {
+        async function loadNotifications() {
+            setLoading(true);
+            const fetchedNotifications = await fetchNotifications();
+            setNotifications(fetchedNotifications);
+            setLoading(false);
+        }
+        loadNotifications();
+    }, []);
+
+    const handleMarkAsRead = async (id: number) => {
+        await markNotificationAsRead(id);
         setNotifications((prev) =>
-            prev.map((notification) => ({ ...notification, read: true }))
+            prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+        );
+    };
+
+    const handleMarkAllAsRead = async () => {
+        await markAllNotificationsAsRead();
+        setNotifications((prev) =>
+            prev.map((n) => ({ ...n, read: true }))
         );
     };
 
     const notificationList = (
-        <div style={{ width: 300, backgroundColor: "#fff" }}>
+        <div style={{ width: 420, backgroundColor: "#fff" }}>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-                <span>Notifications</span>
-                <Button type="link" onClick={markAllAsRead}>
+                <span style={{ fontWeight: "bold" }}>Notifications</span>
+                <Button type="link" onClick={handleMarkAllAsRead}>
                     Mark all as read
                 </Button>
             </div>
-            <List
-                itemLayout="horizontal"
-                dataSource={notifications}
-                renderItem={(notification) => (
-                    <List.Item style={{ backgroundColor: notification.read ? "#f9f9f9" : "#e6f7ff" }}>
-                        <List.Item.Meta
-                            avatar={<Avatar src={notification.avatar} />}
-                            title={notification.title}
-                            description={notification.description}
-                        />
-                    </List.Item>
-                )}
-            />
+
+            {loading ? (
+                <Spin style={{ display: "flex", justifyContent: "center", padding: 20 }} />
+            ) : (
+                <List
+                    itemLayout="horizontal"
+                    dataSource={notifications}
+                    renderItem={(notification) => (
+                        <List.Item
+                            onClick={() => handleMarkAsRead(notification.id)}
+                            style={{
+                                backgroundColor: notification.read ? "#f9f9f9" : "#e6f7ff",
+                                cursor: "pointer",
+                            }}
+                        >
+                            <List.Item.Meta
+                                style={{margin:20}}
+                                avatar={<CircleCheckBig/>}
+                                title={notification.title}
+                                description={notification.message}
+                            />
+                        </List.Item>
+                    )}
+                />
+            )}
         </div>
     );
 
-    // Count unread notifications
     const unreadCount = notifications.filter((n) => !n.read).length;
 
     return (
-        <Dropdown overlay={notificationList} trigger={['click']} placement="topLeft" overlayStyle={{
-            right: "68px",
-            bottom: "18px",
-        }}>
+        <Dropdown overlay={notificationList} trigger={['click']} placement="topLeft">
             <FloatButton
                 icon={<Bell size={18} />}
-                style={{ right: 20, bottom: 20 }} // Positioning for the FloatButton
+                style={{ right: 20, bottom: 20 }}
                 badge={{ count: unreadCount }}
             />
         </Dropdown>
