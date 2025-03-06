@@ -1,17 +1,30 @@
 import { getCustomers } from "../../features/clients/api";
-import { getLocations } from "../../features/locations/api";
+import { getLocations } from "../../features/location/api";
 import { getBrands } from "../../features/brands/api"; // Ensure this import exists
-import { CustomerResponse, LocationResponse, BrandResponse, ModelResponse, RateDateResponse, VehicleResponse, ReservationResponse, CompanyResponse, CategoryResponse, SectionResponse } from "../../types/api";
+import {
+  CustomerResponse,
+  LocationResponse,
+  BrandResponse,
+  ModelResponse,
+  RateDateResponse,
+  VehicleResponse,
+  ReservationResponse,
+  CompanyResponse,
+  CategoryResponse,
+  SectionResponse,
+} from "../../types/api";
 import { useFetchHook } from "../useFetchHook";
 import { getModels } from "../../features/modelsOfBrand/api";
 import { getRateDates } from "../../features/rateDates/api";
 import { getVehicles } from "../../features/vehicles/api";
-import { getReservationDetails, getReservations } from "../../features/reservations/api";
+import {
+  getReservationDetails,
+  getReservations,
+} from "../../features/reservations/api";
 import { useQuery } from "@tanstack/react-query";
 import { getCompanies } from "../../features/companies/api";
 import { getCategories } from "../../features/categories/api";
 import { getSections } from "../../features/sections/api";
-
 
 interface UseBaseParams {
   page?: number;
@@ -67,7 +80,6 @@ export function useBrands(params: UseBaseParams) {
   });
 }
 
-
 export function useModels(params: UseBaseParams) {
   return useFetchHook<ModelResponse>({
     queryKey: "models",
@@ -99,13 +111,12 @@ export function useReservations(params: UseBaseParams) {
   });
 }
 
-
 export function useReservationDetails(bookingId: number | null) {
   return useQuery({
     queryKey: ["reservationDetails", bookingId],
-    queryFn: () => (bookingId ? getReservationDetails(bookingId) : Promise.resolve(null)), 
-    enabled: !!bookingId, 
+    queryFn: () =>
+      bookingId ? getReservationDetails(bookingId) : Promise.resolve(null),
+    enabled: !!bookingId,
     refetchOnWindowFocus: false,
   });
 }
-

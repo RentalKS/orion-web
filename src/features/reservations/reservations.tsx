@@ -17,22 +17,41 @@ import {
   Modal,
 } from "antd";
 import { useState } from "react";
-import { EyeOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import dayjs from "dayjs";
-import { useReservations, useReservationDetails } from "../../hooks/operations/useFetch";
+import {
+  useReservations,
+  useReservationDetails,
+} from "../../hooks/operations/useFetch";
 import { useDeleteReservation } from "../../hooks/operations/useDelete";
 import { processPayment } from "../payments/api";
-import { Banknote} from "lucide-react";
+import { Banknote } from "lucide-react";
 
 const { RangePicker } = DatePicker;
 
 export const Reservations = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-  const [selectedReservationId, setSelectedReservationId] = useState<number | null>(null);
-  const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
-  const { data, isLoading  } = useReservations({ page: 1, size: 10, search: "" });
-  const { data: reservationDetails, isLoading: detailsLoading } = useReservationDetails(selectedBookingId);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
+  const [selectedReservationId, setSelectedReservationId] = useState<
+    number | null
+  >(null);
+  const [selectedBookingId, setSelectedBookingId] = useState<number | null>(
+    null
+  );
+  const { data, isLoading } = useReservations({
+    page: 1,
+    size: 10,
+    search: "",
+  });
+  const { data: reservationDetails, isLoading: detailsLoading } =
+    useReservationDetails(selectedBookingId);
   const deleteReservationMutation = useDeleteReservation();
 
   const bookingStatusColors: Record<string, string> = {
@@ -51,7 +70,6 @@ export const Reservations = () => {
     { label: "Bank Transfer", value: "BANK_TRANSFER" },
     { label: "Cash", value: "CASH" },
   ];
-  
 
   const statusColors: Record<string, string> = {
     ONGOING: "orange",
@@ -67,13 +85,13 @@ export const Reservations = () => {
       message.error("Please select a payment method.");
       return;
     }
-  
+
     try {
       const paymentData = {
         rentalId: selectedReservationId,
         paymentMethod: selectedPaymentMethod,
       };
-  
+
       await processPayment(paymentData);
       message.success("Payment processed successfully!");
       setIsPaymentModalOpen(false);
@@ -88,20 +106,19 @@ export const Reservations = () => {
     setSelectedReservationId(reservationId);
     setIsPaymentModalOpen(true);
   };
-  
-  
 
-  const tableData = data?.data?.data.map((reservation) => ({
-    key: String(reservation.id),
-    id: reservation.id,
-    startDate: dayjs(reservation.startDate).format("YYYY-MM-DD HH:mm"),
-    endDate: dayjs(reservation.endDate).format("YYYY-MM-DD HH:mm"),
-    bookingStatus: reservation.bookingStatus,
-    status: reservation.status,
-    vehicleNumber: reservation.contractVehicleNumber,
-    customer: reservation.fullName || "—",
-    createdAt: dayjs(reservation.createdAt).format("YYYY-MM-DD HH:mm"),
-  })) || [];
+  const tableData =
+    data?.data?.data.map((reservation) => ({
+      key: String(reservation.id),
+      id: reservation.id,
+      startDate: dayjs(reservation.startDate).format("YYYY-MM-DD HH:mm"),
+      endDate: dayjs(reservation.endDate).format("YYYY-MM-DD HH:mm"),
+      bookingStatus: reservation.bookingStatus,
+      status: reservation.status,
+      vehicleNumber: reservation.contractVehicleNumber,
+      customer: reservation.fullName || "—",
+      createdAt: dayjs(reservation.createdAt).format("YYYY-MM-DD HH:mm"),
+    })) || [];
 
   const handleDeleteReservation = (reservationId: number) => {
     deleteReservationMutation.mutate(reservationId, {
@@ -109,7 +126,7 @@ export const Reservations = () => {
     });
   };
 
-  const columns: TableProps<typeof tableData[number]>["columns"] = [
+  const columns: TableProps<(typeof tableData)[number]>["columns"] = [
     { title: "ID", dataIndex: "id", key: "id" },
     { title: "Start Date", dataIndex: "startDate", key: "startDate" },
     { title: "End Date", dataIndex: "endDate", key: "endDate" },
@@ -117,15 +134,23 @@ export const Reservations = () => {
       title: "Booking Status",
       dataIndex: "bookingStatus",
       key: "bookingStatus",
-      render: (val: string) => <Tag color={bookingStatusColors[val] || "default"}>{val}</Tag>,
+      render: (val: string) => (
+        <Tag color={bookingStatusColors[val] || "default"}>{val}</Tag>
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (val: string) => <Tag color={statusColors[val] || "default"}>{val}</Tag>,
+      render: (val: string) => (
+        <Tag color={statusColors[val] || "default"}>{val}</Tag>
+      ),
     },
-    { title: "Contract Vehicle", dataIndex: "vehicleNumber", key: "vehicleNumber" },
+    {
+      title: "Contract Vehicle",
+      dataIndex: "vehicleNumber",
+      key: "vehicleNumber",
+    },
     { title: "Customer", dataIndex: "customer", key: "customer" },
     { title: "Created At", dataIndex: "createdAt", key: "createdAt" },
     {
@@ -133,10 +158,21 @@ export const Reservations = () => {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Button type="text" icon={<EyeOutlined />} onClick={() => setSelectedBookingId(record.id)} />
+          <Button
+            type="text"
+            icon={<EyeOutlined />}
+            onClick={() => setSelectedBookingId(record.id)}
+          />
           <Button type="text" icon={<EditOutlined />} />
-          <Button type="text" icon={<DeleteOutlined />} danger onClick={() => handleDeleteReservation(record.id)} />
-          <Button  onClick={() => openPaymentModal(record.id)}><Banknote style={{color:'darkblue'}}/></Button>
+          <Button
+            type="text"
+            icon={<DeleteOutlined />}
+            danger
+            onClick={() => handleDeleteReservation(record.id)}
+          />
+          <Button onClick={() => openPaymentModal(record.id)}>
+            <Banknote style={{ color: "darkblue" }} />
+          </Button>
         </Space>
       ),
     },
@@ -151,10 +187,20 @@ export const Reservations = () => {
               <RangePicker />
             </Form.Item>
             <Form.Item label="Status">
-              <Select placeholder="Select Status" options={Object.keys(statusColors).map((s) => ({ label: s, value: s }))} allowClear />
+              <Select
+                placeholder="Select Status"
+                options={Object.keys(statusColors).map((s) => ({
+                  label: s,
+                  value: s,
+                }))}
+                allowClear
+              />
             </Form.Item>
             <Form.Item label="Search">
-              <Input placeholder="Search by contract number or customer" allowClear />
+              <Input
+                placeholder="Search by contract number or customer"
+                allowClear
+              />
             </Form.Item>
           </Form>
         </Col>
@@ -165,7 +211,12 @@ export const Reservations = () => {
         </Col>
       </Row>
 
-      <Table columns={columns} dataSource={tableData} pagination={{ pageSize: 10 }} loading={isLoading} />
+      <Table
+        columns={columns}
+        dataSource={tableData}
+        pagination={{ pageSize: 10 }}
+        loading={isLoading}
+      />
 
       <Drawer
         title="Reservation Details"
@@ -182,19 +233,42 @@ export const Reservations = () => {
           <div>Loading details...</div>
         ) : reservationDetails?.data ? (
           <>
-            <Typography.Title level={4}>Contract #{reservationDetails.data.vehicleContractNumber}</Typography.Title>
+            <Typography.Title level={4}>
+              Contract #{reservationDetails.data.vehicleContractNumber}
+            </Typography.Title>
             <Descriptions column={1} bordered size="middle">
-              <Descriptions.Item label="Customer">{reservationDetails.data?.customerDetails.name} {reservationDetails.data.customerDetails.lastName}</Descriptions.Item>
-              <Descriptions.Item label="Email">{reservationDetails.data.customerDetails.email}</Descriptions.Item>
-              <Descriptions.Item label="Phone">{reservationDetails.data.customerDetails.phoneNumber}</Descriptions.Item>
-              <Descriptions.Item label="License Number">{reservationDetails.data.customerDetails.licenseNumber}</Descriptions.Item>
-              <Descriptions.Item label="Booking Status">
-                <Tag color={statusColors[reservationDetails.data.status]}>{reservationDetails.data.status}</Tag>
+              <Descriptions.Item label="Customer">
+                {reservationDetails.data?.customerDetails.name}{" "}
+                {reservationDetails.data.customerDetails.lastName}
               </Descriptions.Item>
-              <Descriptions.Item label="Total Cost">${reservationDetails.data.totalCost}</Descriptions.Item>
-              <Descriptions.Item label="Total Days">{reservationDetails.data.totalDays} days</Descriptions.Item>
+              <Descriptions.Item label="Email">
+                {reservationDetails.data.customerDetails.email}
+              </Descriptions.Item>
+              <Descriptions.Item label="Phone">
+                {reservationDetails.data.customerDetails.phoneNumber}
+              </Descriptions.Item>
+              <Descriptions.Item label="License Number">
+                {reservationDetails.data.customerDetails.licenseNumber}
+              </Descriptions.Item>
+              <Descriptions.Item label="Booking Status">
+                <Tag color={statusColors[reservationDetails.data.status]}>
+                  {reservationDetails.data.status}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Total Cost">
+                ${reservationDetails.data.totalCost}
+              </Descriptions.Item>
+              <Descriptions.Item label="Total Days">
+                {reservationDetails.data.totalDays} days
+              </Descriptions.Item>
               <Descriptions.Item label="Vehicle Status">
-                <Tag color={bookingStatusColors[reservationDetails.data.vehicleStatus]}>{reservationDetails.data.vehicleStatus}</Tag>
+                <Tag
+                  color={
+                    bookingStatusColors[reservationDetails.data.vehicleStatus]
+                  }
+                >
+                  {reservationDetails.data.vehicleStatus}
+                </Tag>
               </Descriptions.Item>
               {reservationDetails.data.signature && (
                 <Descriptions.Item label="Signature">
@@ -236,7 +310,6 @@ export const Reservations = () => {
           </Form.Item>
         </Form>
       </Modal>
-
     </>
   );
 };
